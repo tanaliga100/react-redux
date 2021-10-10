@@ -1,23 +1,37 @@
 
 import './App.css';
-import {useSelector, useDispatch} from 'react-redux'
+import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import {actionCreators} from './state/index.js'
+import {setUsersInfo} from './redux/actions/users'
+function App( props) {
+  console.log(props)
 
-function App() {
-  const state = useSelector((state)=> state.account)
-  const dispatch = useDispatch()
-
-  const {depositMoney, withdrawMoney} = bindActionCreators(actionCreators, dispatch)
-
+  const handeClick = (type) => {
+    if(type === 'name'){
+      props.setUsersInfo({name: 'Jordan'})
+    }else if(type === 'age'){
+      props.setUsersInfo({age: 21})
+    }else{
+      props.setUsersInfo({gender: 'Male'})
+    }
+  }
   return (
     <div className="App">
         <h1>Hello Redux</h1>
-        <h2>{state}</h2>
-        <button onClick={()=> depositMoney(10)}>Deposit</button>
-        <button onClick={()=> withdrawMoney(12)}>Withdraw</button>
+        <button onClick={()=> handeClick('name')}> Add Name</button>
+        <button onClick={()=> handeClick('age')}> Add Age</button>
+        <button onClick={()=> handeClick('gender')}> Add Gender</button>
     </div>
   );
 }
-
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    users: state.users
+  }
+}
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+    setUsersInfo
+  }, dispatch)
+}
+export default connect(mapStateToProps, mapDispatchToProps)(App);
